@@ -1,20 +1,28 @@
 {
-  "name": "back",
+  "name": "devjunior-back",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/air-one-x/devjunior-back.git"
+  },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/air-one-x/devjunior-back/issues"
+  },
+  "homepage": "https://github.com/air-one-x/devjunior-back#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mysql": "^2.18.1",
-    "mysql2": "^2.1.0",
-    "sequelize": "^6.3.4"
+    "mongoose": "^5.10.5",
+    "nodemon": "^2.0.4"
   }
 }

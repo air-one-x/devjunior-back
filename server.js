@@ -1,21 +1,40 @@
-// Imports
+// IMPORTS
 const express = require('express');
+const mongoose = require('mongoose');
+const userRoute = require('./routes/users');
 const bodyParser = require('body-parser');
-const apiRouter = require('./apiRouter').router;
+require('dotenv/config')
 
-// Utilisation
-const server = express();
 
-//bodyParser config
-server.use(bodyParser.urlencoded({extended: true}));
-server.use(bodyParser.json());
 
-// Routes
-server.get('/', (req, res) => {
-    res.setHeader('Content-Type','text/html');
-    res.status(200).send('<h1>BONJOUR</h1>');
-});
+// INIT EXPRESS
+const app = express();
 
-server.use('/api/',apiRouter);
 
-server.listen(8080,() => console.log('server ok'));
+
+//CONNECTION TO DB
+mongoose.connect(
+    process.env.DB_CONNECTION, {useNewUrlParser : true, useUnifiedTopology : true });
+
+    
+
+//CONFIG
+app.use(bodyParser.json());
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    next();
+  });
+
+
+
+
+//ROUTES
+app.use('/users', userRoute);
+
+
+
+
+//START APP
+app.listen(3000);

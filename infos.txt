@@ -1,0 +1,8 @@
+Créer un fichier .env avec : 
+
+DB_CONNECTION=mongodb+srv://<Name mongodb>:<mot de passe>@cluster0.x21yb.mongodb.net/<DB>?retryWrites=true&w=majority
+TOKEN_CODE=code pour token
+
+Remplacer <Name mongodb> par votre nom d'utilisateur sur mongodb
+          <mot de passe>
+          <DB>
