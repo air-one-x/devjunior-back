@@ -1,8 +1,10 @@
 // IMPORTS
 const express = require('express');
 const mongoose = require('mongoose');
-const userRoute = require('./routes/users');
 const bodyParser = require('body-parser');
+
+const devRoute = require('./routes/dev');
+const companyRoute = require('./routes/company');
 require('dotenv/config')
 
 
@@ -31,7 +33,9 @@ app.use((req, res, next) => {
 
 
 //ROUTES
-app.use('/users', userRoute);
+app.use('/dev', devRoute);
+app.use('/company', companyRoute);
+
 
 
 

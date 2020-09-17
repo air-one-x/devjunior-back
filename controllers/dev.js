@@ -2,45 +2,50 @@
 const bcrypt = require('bcrypt');
 const token = require('jsonwebtoken');
 
-const ModelUser = require('../models/Users');
+const ModelDev = require('../models/Dev');
 require('dotenv/config');
 
 
 module.exports = {
 
     findOneUser : (req, res) => {
-        const findUser = ModelUser.find({_id: req.params.id })
-        .then( result => res.status(200).json(result))
+        const findUser = ModelDev.find({_id: req.params.id })
+        .then( result => {
+            if(result.length == 0) { return res.status(400).json({"error":"Aucun utilisateur"})}
+            res.status(200).json(result);
+        })
         .catch( error => res.status(400).json(error));
     },
 
     findAllUsers : (req, res) => {
-        const usersList = ModelUser.find()
-         .then( result => res.status(200).json(result))
+        const usersList = ModelDev.find()
+         .then( result => {
+             if(result.length == 0 ) { return res.status(400).json({"error": "Aucun utilisateur"})}
+         })
          .catch(error  => res.status(400).json({"error" : error}));
     },
 
     addNewUser : (req,res) => {
-        ModelUser.find({mail: req.body.mail})
+        ModelDev.find({mail: req.body.mail})
         .then( result => {
             if(result.length != 0) { return res.status(400).json({"error": "mail existe déjà"})};
             bcrypt.hash(req.body.password,10)
             .then( hash => {
-                const newUser = new ModelUser({
+                const newUser = new ModelDev({
                     mail     : req.body.mail,
                     username : req.body.username,
                     password : hash
                 });
                 newUser.save()
                 .then( saveUser => res.status(200).json(saveUser))
-                .catch( error => res.status(400).json(error));
+                .catch( error => res.status(400).json({"error" : "400"}));
             })
-            .catch( error => res.status(400).json(error))
+            .catch( error => res.status(400).json({"error": "400"}))
         })
     },
 
     deleteUser : (req, res) => {
-        const findUser = ModelUser.findByIdAndDelete(req.params.id)
+        const findUser = ModelDev.findByIdAndDelete(req.params.id)
         .then( result => {
             res.status(200).json({"Validation" : "Utilisateur supprimé"})
         })
@@ -50,19 +55,20 @@ module.exports = {
     },
 
     updateUser : (req, res) => {
-        const findUser = ModelUser.findByIdAndUpdate(req.params.id, req.body)
+        const findUser = ModelDev.findByIdAndUpdate(req.params.id, req.body)
         .then( result => {
-            res.status(200).json({"validation" : "Modification OK"});
+            if(!result) { return res.status(400).json({"error":"aucun utilisateur"})};
+            res.status(200).json({"validation" : result});
         })
         .catch( error => {
-            res.status(400).json(error);
+            res.status(400).json({"error":"400"});
         });
     },
 
     login : (req, res) =>  {
-        const findUser = ModelUser.findOne({mail: req.body.mail})
+        const findUser = ModelDev.find({mail: req.body.mail})
         .then( userFind => {
-            if(userFind == null) { return res.status(400).json({"error" : "utilisateur non trouvé"})};
+            if(userFind.length ==0) { return res.status(400).json({"error" : "utilisateur non trouvé"})};
             bcrypt.compare(req.body.password, userFind.password)
             .then( result => {
                 if(!result) { return res.status(400).json({"error" : "mot de passe incorrect"}) };

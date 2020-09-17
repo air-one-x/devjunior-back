@@ -3,7 +3,7 @@ const mongoose = require ('mongoose');
 
 //SCHEMA 
 
-const UserSchema = mongoose.Schema({
+const DevSchema = mongoose.Schema({
     username: {
         type: String,
         required: true,
@@ -20,8 +20,12 @@ const UserSchema = mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 
 });
 
-module.exports = mongoose.model('Users', UserSchema);
+module.exports = mongoose.model('Users', DevSchema);
