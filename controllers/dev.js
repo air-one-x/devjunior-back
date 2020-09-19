@@ -78,6 +78,8 @@ module.exports = {
         const findUser = ModelDev.find({mail: req.body.mail})
         .then( userFind => {
             if(userFind.length ==0) { return res.status(400).json({"error" : "utilisateur non trouvé"})};
+            if(REGEX_EMAIL.test(req.body.mail) === false) { return res.status(400).json({"error": "Email non valide"})};
+            if(REGEX_PASSWORD.test(req.body.password) === false) { return res.status(400).json({"error": "Mot de passe non valide"})};
             bcrypt.compare(req.body.password, userFind.password)
             .then( result => {
                 if(!result) { return res.status(400).json({"error" : "mot de passe incorrect"}) };
