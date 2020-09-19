@@ -5,6 +5,11 @@ const jwt = require('jsonwebtoken');
 const CompanyModel = require('../models/Company');
 require('dotenv/config');
 
+// REGEX SECURITY
+const REGEX_EMAIL = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ ;
+const REGEX_PASSWORD = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/ ;
+const REGEX_NAME = /^[\w'\-,.]*[^_!¡?÷?¿\/\\+=@#$%ˆ&*(){}|~<>;:[\]]*$/ ;
+
 module.exports = {
 
     findAllUsers : (req, res) => {
@@ -28,7 +33,10 @@ module.exports = {
     addUser : (req, res) => {
         CompanyModel.find({mail: req.body.mail})
         .then(findUser => {
-            if(findUser != 0) { return res.status(400).json({"error":"Utilisateur existe déjà"})}
+            if(findUser != 0) { return res.status(400).json({"error":"Utilisateur existe déjà"})};
+            if(REGEX_EMAIL.test(req.body.mail) === false) { return res.status(400).json({"error": "Email non valide"})};
+            if(REGEX_PASSWORD.test(req.body.password) === false) { return res.status(400).json({"error": "Mot de passe non valide"})};
+            if(REGEX_NAME.test(req.body.name) === false) { return res.status(400).json({"error": "Username non valide"})};
             bcrypt.hash(req.body.password, 10)
             .then(hash => {
                 const newUser = new CompanyModel({
